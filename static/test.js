@@ -1,4 +1,4 @@
-    var app = angular.module('main', ['toaster'])
+    var app = angular.module('main', ['toaster']);
 
     app.factory('testFactory', function ($http) {
         return {
@@ -23,7 +23,7 @@
 
         // Will be executed when the "Add item to list" button is pressent in index.mako
         $scope.addElement = function (newElement) {
-            elementIndex++
+            elementIndex++;
             $scope.list.push({'id': newElement + elementIndex});
         };
 

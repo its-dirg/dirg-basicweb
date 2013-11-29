@@ -32,9 +32,14 @@ def application(environ, start_response):
     :param start_response: WSGI start response.
     :return: Depends on the request. Always a WSGI response where start_response first have to be initialized.
     """
+
+    response = None
+
     session = Session(environ)
 
     http_helper = HttpHandler(environ, start_response, session, logger)
+
+
 
     parameters = http_helper.query_dict()
 
@@ -42,7 +47,7 @@ def application(environ, start_response):
     path = http_helper.path()
 
     http_helper.log_request()
-    response = None
+
     if http_helper.verify_static(path):
         return http_helper.handle_static(path)
 
@@ -50,7 +55,7 @@ def application(environ, start_response):
         return test.handle(path)
 
     if response is None:
-        response = http_helper.Http404()
+        response = http_helper.http404()
 
     http_helper.log_response(response)
     return response

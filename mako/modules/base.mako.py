@@ -4,7 +4,7 @@ UNDEFINED = runtime.UNDEFINED
 __M_dict_builtin = dict
 __M_locals_builtin = locals
 _magic_number = 8
-_modified_time = 1385727039.846639
+_modified_time = 1385733002.447296
 _enable_loop = True
 _template_filename = u'/opt/dirg/dirg-util/mako/templates/base.mako'
 _template_uri = u'base.mako'
@@ -29,7 +29,7 @@ def render_body(context,**pageargs):
             return render_css(context.locals_(__M_locals))
         __M_writer = context.writer()
         # SOURCE LINE 1
-        __M_writer(u'<!DOCTYPE html>\n<!--\nIn this file all the imports of external libraries should be declared.\n-->\n<html ng-app="main">\n    <head>\n        <script src="/static/angular.js" ></script>\n        <script src="/static/jquery.latest.min.js"></script>\n        <script src="/static/bootstrap/js/bootstrap.min.js"></script>\n        ')
+        __M_writer(u'<!DOCTYPE html>\n<!--\nIn this file all the imports of external libraries should be declared.\n-->\n<html ng-app="main">\n    <head>\n        <script src="/static/angular.js" ></script>\n        <script src="/static/jquery.min.latest.js"></script>\n        <script src="/static/bootstrap/js/bootstrap.min.js"></script>\n        ')
         if 'parent' not in context._data or not hasattr(context._data['parent'], 'script'):
             context['self'].script(**pageargs)
         

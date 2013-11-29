@@ -1,17 +1,10 @@
 # -*- coding: utf-8 -*-
-import cgi
-import copy
-
 import json
 import subprocess
-from saml2.httputil import Response, ServiceError
+from dirg_util.http_util import Response, ServiceError
 
-import glob
-from os.path import basename
-import os
-import uuid
-from urllib import quote
 __author__ = 'haho0032'
+
 
 class Test:
     IDP_TESTDRV = '/usr/local/bin/idp_testdrv.py'
@@ -33,26 +26,23 @@ class Test:
         self.config = config
         self.parameters = parameters
         self.urls = {
-            "" : "index.mako",
-            "list" : None
+            "": "index.mako",
+            "list": None
         }
 
-
     def verify(self, path):
-        for url, file in self.urls.iteritems():
+        for url, file_ in self.urls.iteritems():
             if path == url:
                 return True
 
-
     def handle(self, path):
         if path == "":
-            return self.handleIndex(self.urls[path])
+            return self.handle_index(self.urls[path])
         elif path == "list":
-            return self.handleList()
+            return self.handle_list()
 
-
-    def handleIndex(self, file):
-        resp = Response(mako_template=file,
+    def handle_index(self, file_):
+        resp = Response(mako_template=file_,
                         template_lookup=self.lookup,
                         headers=[])
         argv = {
@@ -61,43 +51,42 @@ class Test:
         return resp(self.environ, self.start_response, **argv)
 
 
-    def handleList(self):
+    def handle_list(self):
         parameter = self.parameters['parameter']
 
-        if (parameter == "testParameter"):
+        if parameter == "testParameter":
             result = [{'id': 'server element1'}, {'id': 'server element2'}, {'id': 'server element3'}]
-            myJson = json.dumps(result)
+            my_json = json.dumps(result)
 
         else:
-            return self.serviceError("Cannot list the tests.")
+            return self.service_error("Cannot list the tests.")
 
-        return self.returnJSON(myJson)
+        return self.return_json(my_json)
 
-
-    def returnJSON(self, text):
+    def return_json(self, text):
         resp = Response(text, headers=[('Content-Type', "application/json")])
         return resp(self.environ, self.start_response)
 
 
-    def serviceError(self, message):
+    def service_error(self, message):
         message = {"ExceptionMessage": message}
         resp = ServiceError(json.dumps(message))
         return resp(self.environ, self.start_response)
 
 
-    def runScript(self, command, working_directory=None):
+    def run_script(self, command, working_directory=None):
         try:
             p = subprocess.Popen(command,
                                  stdout=subprocess.PIPE,
                                  stderr=subprocess.PIPE,
                                  cwd=working_directory)
-            while(True):
+            while True:
                 retcode = p.poll() #returns None while subprocess is running
-                if(retcode is not None):
+                if retcode is not None:
                     break
             p_out = p.stdout.read()
             p_err = p.stderr.read()
-            return (True, p_out, p_err)
+            return True, p_out, p_err
         except Exception as ex:
             self.logger.fatal("Can not run command: +" + ex.message)
-            return (False, None, None)
+            return False, None, None

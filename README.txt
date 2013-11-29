@@ -1,4 +1,4 @@
 ===========
-saml2testGui
+dirg-basicweb
 ===========
-A gui for saml2test
+A basic example web application that shows the css and javascript techniques that are used within dirg.

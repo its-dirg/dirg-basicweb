@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
+from dirg.basicweb.TestHandler import Test
 
+from dirg_util.log import create_logger
+from dirg_util.session import Session
+from dirg_util.http_util import HttpHandler
 
-__author__ = 'haho0032'
-#Imports within the project
-from saml2testGui.util.log import create_logger
-from saml2testGui.util.http import HttpHandler
-from saml2testGui.util.session import Session
-from saml2testGui.TestHandler import Test
 
 #External imports
 import importlib
@@ -18,7 +16,10 @@ from mako.lookup import TemplateLookup
 
 
 #Lookup for all mako templates.
-LOOKUP = TemplateLookup(directories=['mako/templates', 'mako/htdocs'],
+LOOKUP = TemplateLookup(directories=['mako/templates',
+                                     "/opt/dirg/dirg-util/mako/templates",
+                                     'mako/htdocs',
+                                     "/opt/dirg/dirg-util/static"],
                         module_directory='mako/modules',
                         input_encoding='utf-8',
                         output_encoding='utf-8')
@@ -35,15 +36,15 @@ def application(environ, start_response):
 
     http_helper = HttpHandler(environ, start_response, session, logger)
 
-    parameters = http_helper.getQueryDict()
+    parameters = http_helper.query_dict()
 
     test = Test(environ, start_response, session, logger, LOOKUP, config, parameters)
-    path = http_helper.getPath()
+    path = http_helper.path()
 
-    http_helper.logRequest()
+    http_helper.log_request()
     response = None
-    if http_helper.verifyStatic(path):
-        return http_helper.handleStatic(path)
+    if http_helper.verify_static(path):
+        return http_helper.handle_static(path)
 
     if test.verify(path):
         return test.handle(path)
@@ -51,7 +52,7 @@ def application(environ, start_response):
     if response is None:
         response = http_helper.Http404()
 
-    http_helper.logResponse(response)
+    http_helper.log_response(response)
     return response
 
 
